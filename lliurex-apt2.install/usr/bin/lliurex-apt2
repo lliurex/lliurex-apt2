@@ -1,1 +1,1 @@
-gksudo /usr/bin/nw0.21 /usr/share/lliurex-apt2
+pkexec /usr/bin/nw0.21 /usr/share/lliurex-apt2
