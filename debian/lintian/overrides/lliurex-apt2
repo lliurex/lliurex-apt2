@@ -1,0 +1,10 @@
+lliurex-apt2 source: source-is-missing lliurex-apt2.install/usr/share/lliurex-apt2/js/jquery.min.js
+lliurex-apt2 source: source-is-missing lliurex-apt2.install/usr/share/lliurex-apt2/js/jquery.xmlrpc.min.js
+lliurex-apt2 source: source-is-missing lliurex-apt2.install/usr/share/lliurex-apt2/js/material.min.js.map
+lliurex-apt2 source: source-is-missing lliurex-apt2.install/usr/share/lliurex-apt2/js/ripples.min.js.map
+lliurex-apt2: description-synopsis-is-duplicated
+lliurex-apt2: duplicate-font-file usr/share/lliurex-apt2/css/fonts/Roboto-Regular.ttf also in fonts-roboto
+lliurex-apt2: embedded-javascript-library usr/share/lliurex-apt2/js/jquery.min.js
+lliurex-apt2: binary-without-manpage usr/bin/lliurex-apt2
+lliurex-apt2: executable-not-elf-or-script usr/bin/lliurex-apt2
+

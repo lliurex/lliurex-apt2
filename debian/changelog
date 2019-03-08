@@ -1,0 +1,47 @@
+lliurex-apt2 (2.1) bionic; urgency=medium
+
+  * bionic release. Replace gksu with pkexec
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Fri, 08 Mar 2019 14:17:23 +0100
+
+lliurex-apt2 (2.0.6) xenial; urgency=medium
+
+  * Added desktop
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Tue, 27 Nov 2018 14:14:38 +0100
+
+lliurex-apt2 (2.0.5) xenial; urgency=high
+
+  * New node-webkit dependence, nwjs0.21 
+
+ -- Daniel Duran Vecino <daduve@gmail.com>  Wed, 17 Jan 2018 13:13:21 +0100
+
+lliurex-apt2 (2.0.4) xenial; urgency=high
+
+  * Removing useless space
+
+ -- Hector Garcia Huerta <hectorgh@gmail.com>  Wed, 24 May 2017 16:42:28 +0200
+
+lliurex-apt2 (2.0.3) xenial; urgency=high
+
+  * Fixed mirror path
+
+ -- Hector Garcia Huerta <hectorgh@gmail.com>  Wed, 24 May 2017 16:39:00 +0200
+
+lliurex-apt2 (2.0.2) xenial; urgency=medium
+
+  * Minor bugs solved 
+
+ -- Vicent Fernandez i Capilla <vfernandezc@llx-vfernandez.edu.gva.es>  Tue, 17 May 2016 09:42:19 +0200
+
+lliurex-apt2 (2.0.1) xenial; urgency=medium
+
+  * Fixed bugs
+
+ -- Vicent Fernandez i Capilla <vfernandezc@llx-vfernandez.edu.gva.es>  Tue, 10 May 2016 12:30:51 +0200
+
+lliurex-apt2 (2.0) xenial; urgency=low
+
+  * Initial Release.
+
+ -- Vicent Fernandez i Capilla <vicent.fernandez@gva.es>  Fri, 18 Dec 2015 09:56:54 +0100
