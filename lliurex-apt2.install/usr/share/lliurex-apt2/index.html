@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="ca">
+  <head>
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="css/bootstrap.min.css" rel="stylesheet">            
+    <!--link href="css/awesome-bootstrap-checkbox.css" rel="stylesheet"-->    
+  <link href="css/bootstrap-material-design.css" rel="stylesheet">
+  <link href="css/ripples.min.css" rel="stylesheet"-->  
+          <script src="js/jquery.min.js"></script>    
+ <script src="js/bootstrap.min.js"></script>
+ <script src="js/bootstrap-dialog.js"></script>   
+ <script src="js/jquery.xmlrpc.min.js"></script>    
+  <script src="js/ripples.min.js"></script>
+  <script src="js/material.js"></script>
+    <script>  
+    var counter=0;
+    var arxiu_reps = '/usr/share/lliurex-apt2/reps';
+    var idioma_val = {
+      repositorisLocals:'Repositoris locals',
+      repositorisServidorAula:"Repositoris del Servidor d'Aula",
+      habilitarRepositori:'Habilitar repositoris',
+      nom:'Nom',
+      repositori:'Repositori',
+      repositoris:'Repositoris',
+      afegirRepositori:'Afegir repositori',
+      cancelar:'Cancel·lar',
+      actualitzantFontsPaquets:'Actualitzant fonts de paquets',
+      espereuUnMoment:'Espereu un moment',
+      repositorisLliureX:'Repositoris LliureX',
+      respositorisGVA:'Repositoris de GVA',
+      repositorisEducatius:'Repositoris de recursos educatius',
+      respositorisUbuntu:"Repositoris d'Ubuntu",
+      acceptar:'Acceptar',
+      opcions:'Opcions',      
+      mostrarEixida:'Mostrar eixida',
+      finalitzat:'Finalitzat',
+    };
+    var idioma_cas = {
+      repositorisLocals:'Repositorios locales',
+      repositorisServidorAula:"Repositorios del servidor de aula",
+      habilitarRepositori:'Habilitar repositorios',
+      nom:'Nombre',
+      repositori:'Repositorio',
+      repositoris:'Repositorios',
+      afegirRepositori:'Añadir repositorio',
+      cancelar:'Cancelar',
+      actualitzantFontsPaquets:'Actualizando fuentes de paquetes',
+      espereuUnMoment:'Espera un momento',
+      repositorisLliureX:'Repositorios LliureX',
+      respositorisGVA:'Repositorios de GVA',
+      repositorisEducatius:'Repositorios de recursos educativos',
+      respositorisUbuntu:"Repositorios de Ubuntu",
+      acceptar:'Aceptar',
+      opcions:'Opciones',      
+      mostrarEixida:'Mostrar salida',
+      finalitzat:'Finalizado',
+    }    
+      var idioma;
+      var linies = [];
+      var visibleLocals = false;
+      var visibleServidorsAula = false;      
+      var visibleGVA = false;
+      var repositorisLliurexNet = [
+        "deb http://lliurex.net/xenial xenial main restricted universe multiverse",
+        "deb http://lliurex.net/xenial xenial-updates main restricted universe multiverse",
+        "deb http://lliurex.net/xenial xenial-security main restricted universe multiverse"
+      ];
+      var repositorisLocals = [
+        "deb file:///net/mirror/llx16 xenial main restricted universe multiverse",
+        "deb file:///net/mirror/llx16 xenial-updates main restricted universe multiverse",
+        "deb file:///net/mirror/llx16 xenial-security main restricted universe multiverse"
+      ];
+      var respositoriServidorAula = [
+        "deb http://mirror/llx16 xenial main restricted universe multiverse",
+        "deb http://mirror/llx16 xenial-updates main restricted universe multiverse",
+        "deb http://mirror/llx16 xenial-security main restricted universe multiverse"
+      ];
+    var respositorisUbuntu = [
+        "deb http://es.archive.ubuntu.com/ubuntu xenial main restricted universe multiverse",
+        "deb http://es.archive.ubuntu.com/ubuntu xenial-updates main restricted universe multiverse",
+        "deb http://es.archive.ubuntu.com/ubuntu xenial-security main restricted universe multiverse"
+      
+    ];
+    var respositorisEducatius = [
+     "deb http://lliurex.net/recursos-edu xenial main restricted universe multiverse",
+    ];
+    var respositorisGVA = [
+      "deb http://repositorios.gva.es/dgti/xenial xenial main restricted universe multiverse",
+      "deb http://repositorios.gva.es/dgti/xenial xenial-updates main restricted universe multiverse",
+      "deb http://repositorios.gva.es/dgti/xenial xenial-security main restricted universe multiverse",
+      "deb http://repositorios.gva.es/dgti/xenial-gva xenial main restricted universe multiverse",
+      "deb http://repositorios.gva.es/dgti/xenial-gva xenial main restricted universe multiverse",
+      "deb http://repositorios.gva.es/dgti/xenial-gva xenial main restricted universe multiverse",
+    ];
+    var respositorisPropis = [];
+    function esborraLinia(index){
+      linies.splice(index,1);
+      var html =creaTaula(linies);
+      $('#mostrador_grafic').html(html);
+      comprovaBotonsChecked();   
+    }
+    function creaTaula(_linies){
+      var html = "<ul class='list-group' width='100%'>";
+        for(var i=0;i<_linies.length;i++){
+              var color_verd = '';
+              var fons_gris = '';
+              if (_linies[i][0]=='#'){ //línia comentada
+                  color_verd = " style='color:green'";              
+              }
+              if (_linies[i].trim()==''){ //linia buida
+                //fons_gris = " style='background:lightgrey'";
+                fons_gris = "background:lightgrey;";
+              }                
+              html +="<li class='list-group-item row' style='padding-top:0px;padding-bottom:0px;border: 0.1em solid black;"+fons_gris+"'><div class='col-md-10'"+color_verd+">"+_linies[i]+"</div><div class='col-md-1'><span class='glyphicon glyphicon-remove' style='cursor:pointer' onclick='esborraLinia("+i+")'></span></div></li>";              
+            }
+        html +="</ul>";
+        return html;
+    }   
+
+    function Afegir(identificador, vector){
+      for(var i=0;i<vector.length;i++){
+         linies.push(vector[i]);
+      }
+       var html =creaTaula(linies);
+      $('#mostrador_grafic').html(html);
+    }
+    function Esborrar(identificador,vector){
+      for(var j=0;j<vector.length;j++){
+        index=linies.indexOf(vector[j]);
+        if (index!=-1){
+          linies.splice(index,1);
+        }
+      }
+      var html =creaTaula(linies);            
+      $('#mostrador_grafic').html(html);      
+    } 
+    function comprovaBotonsChecked(){       
+      
+      //Repositoris Lliurex               
+      if ((linies.indexOf(repositorisLliurexNet[0])!=-1) || (linies.indexOf(repositorisLliurexNet[1])!=-1) || (linies.indexOf(repositorisLliurexNet[2])!=-1)){
+          $('#botonsLliurex input').attr('checked',true).change(); 
+      }      
+      else{
+          $("#botonsLliurex input").attr('checked',true).change();          
+          setTimeout(function(){$("#botonsLliurex input").removeAttr('checked');}
+          ,50
+          );
+      }
+       //Repositoris locals
+      if ((linies.indexOf(repositorisLocals[0])!=-1) || (linies.indexOf(repositorisLocals[1])!=-1) || (linies.indexOf(repositorisLocals[2])!=-1)){
+          $('#botonsLocal input').attr('checked',true).change();
+      }
+      else{          
+          $("#botonsLocal input").attr('checked',true).change();          
+          setTimeout(function(){$("#botonsLocal input").removeAttr('checked');}
+          ,50
+          );
+      }
+       //Repositoris Aula
+      if ((linies.indexOf(respositoriServidorAula[0])!=-1) || (linies.indexOf(respositoriServidorAula[1])!=-1) || (linies.indexOf(respositoriServidorAula[2])!=-1)){
+          $('#botonsAula input').attr('checked',true).change();
+      }
+      else{          
+          $("#botonsAula input").attr('checked',true).change();          
+          setTimeout(function(){$("#botonsAula input").removeAttr('checked');}
+          ,50
+          );
+      }
+      if ((linies.indexOf(respositorisEducatius[0])!=-1)){
+          $('#botonsEducatius input').attr('checked',true).change();
+      }
+      else{          
+          $("#botonsEducatius input").attr('checked',true).change();          
+          setTimeout(function(){$("#botonsEducatius input").removeAttr('checked');}
+          ,50
+          );
+      }    
+ //Repositoris Ubuntu
+      if ((linies.indexOf(respositorisUbuntu[0])!=-1) || (linies.indexOf(respositorisUbuntu[1])!=-1) || (linies.indexOf(respositorisUbuntu[2])!=-1)){
+          $('#botonsUbuntu input').attr('checked',true).change();
+      }
+      else{      
+          $("#botonsUbuntu input").attr('checked',true).change();          
+          setTimeout(function(){$("#botonsUbuntu input").removeAttr('checked');}
+          ,50
+          );
+      }      
+       if ((linies.indexOf(respositorisGVA[0])!=-1) || (linies.indexOf(respositorisGVA[1])!=-1) || (linies.indexOf(respositorisGVA[2])!=-1)|| (linies.indexOf(respositorisGVA[3])!=-1)|| (linies.indexOf(respositorisGVA[4])!=-1)|| (linies.indexOf(respositorisGVA[5])!=-1)){
+          $('#botonsGVA input').attr('checked',true).change();
+          
+      }
+      else{          
+          $("#botonsGVA input").attr('checked',true).change();          
+          setTimeout(function(){$("#botonsGVA input").removeAttr('checked');}
+          ,50
+          );
+      }  
+     var arrayToRemoveChecked =  []; 
+      for(var i=0;i<respositorisPropis.length;i++){
+          $('#botonsRepositori_'+i +' input').attr('checked',true).change();          
+          var content=$('#botonsRepositori_'+i +' input');           
+          if (linies.indexOf(respositorisPropis[i].repositori)==-1){            
+            arrayToRemoveChecked.push(content);
+         }
+      } 
+     setTimeout(function(){   
+        for(var i=0;i<arrayToRemoveChecked.length;i++){
+          content = arrayToRemoveChecked[i];
+          $(content).removeAttr('checked');
+        }
+        },50);
+
+     
+     
+    }
+    function comprovaBotonsVisible(){      
+      if (!visibleLocals){        
+        $('#botonsLocal').addClass('hidden');        
+      }
+      else{
+        $('#botonsLocal').removeClass('hidden');
+      }
+      if (!visibleServidorsAula){        
+        $('#botonsAula').addClass('hidden');        
+      }
+      else{
+        $('#botonsAula').removeClass('hidden');
+      }
+      if (!visibleGVA){        
+        $('#botonsGVA').addClass('hidden');        
+      }
+      else{
+        $('#botonsGVA').removeClass('hidden');
+      }      
+    }
+    function gestiona(identificador,vector){        
+        var nouEstat = $('#botons'+identificador+' input').is(':checked');        
+        var AccioAfer = Esborrar;
+        if (nouEstat) //volem afegir
+          AccioAfer=Afegir;
+        AccioAfer(identificador,vector);
+      }
+    function carregaInicialRepositorisPropis(){
+     var fs = require('fs');
+        fs.readFile(arxiu_reps, 'utf8', function (err,data) {
+        
+            if (err) {            
+              return;
+            }
+            var __liniesRepos = data.split("\n");
+            __liniesRepos.pop();
+            for(var i=0;i<__liniesRepos.length;i++){
+              __linia = __liniesRepos[i].split("#");              
+              respositorisPropis.push({nom:__linia[0],repositori:__linia[1]});
+            }//hem d'esborar la darrera linia            
+            var nouHtml = creaCheckBoxRepositorisPropis(respositorisPropis);
+            $('#repositorisPropis').html(nouHtml);  
+            $.material.init();
+        });
+    }
+    function carregaInicial(){        
+        CarregaInicialdetectaIdioma();
+        carregaInicialRepositorisPropis();
+        var fs = require('fs');
+        fs.readFile('/etc/apt/sources.list', 'utf8', function (err,data) {
+            if (err) {
+              return console.log(err);
+            }
+            linies = data.split("\n");
+            var html =creaTaula(linies);                        
+            $('#mostrador_grafic').html(html);
+        var sys = require('sys');
+        var exec = require('child_process').exec;
+        var child;        
+        
+        child = exec("lliurex-version", function (error, stdout, stderr) {
+            if (stdout.indexOf('gva')!=-1){
+              visibleGVA = true;
+            }
+            if(stdout.indexOf('server')!=-1){
+             visibleLocals = true; 
+            }
+            if(stdout.indexOf('client')!=-1){
+              visibleServidorsAula = true; 
+            }
+            comprovaBotonsVisible();            
+            setTimeout(comprovaBotonsChecked,100);            
+            if (error !== null) {
+              console.log('exec error: ' + error);
+            }
+        
+        });            
+        });
+
+    }
+  function gestionaPropis(index){    
+    gestiona("Repositori_"+index,[respositorisPropis[index].repositori]);
+  }
+  function creaCheckBoxRepositorisPropis(_propis){
+    var html = " <div class='form-group'>";    
+    for(var i=0;i<_propis.length;i++){
+      var checked = '';
+      if (linies.indexOf(_propis[i].repositori)!=-1){
+        checked ='checked';
+      }
+      html +="<div id='botonsRepositori_"+i+"' class='checkbox' ><label><input type='checkbox' onClick='gestionaPropis("+i+")'>&nbsp;"+_propis[i].nom+"</input></label></div>";      
+    }
+    html +="</div>";
+    return html;
+  }
+  function afegirRespositori(){
+    var _respositori = $('#repositoriManual').val();
+     if(_respositori!=''){
+         linies.push(_respositori);
+         var nouHTML = creaTaula(linies);         
+         $('#mostrador_grafic').html(nouHTML);         
+         
+         $('#repositoriManual').val('');
+    }
+  }
+  function visible(boto){
+    if($('#botons'+boto).hasClass('hidden'))
+       $('#botons'+boto).removeClass('hidden');
+    else
+      $('#botons'+boto).addClass('hidden');
+  }
+  function mostrarOpcions(){
+        var html =" <div class='form-group'>";
+        if (!visibleLocals){
+            html+="<div id='botonsLocalOpcio' class='checkbox' ><label><input type='checkbox' class='styled' onClick='visible(&apos;Local&apos;)' ></input>"+idioma.repositorisLocals+"</label></div>";            
+        }
+        if (!visibleServidorsAula){
+          html += "<div id='botonsAulaOpcio' class='checkbox' ><label><input type='checkbox' class='styled' onClick='visible(&apos;Aula&apos;)'></input>"+idioma.repositorisServidorAula+"</label></div>";
+        }        
+        html +="</div>";
+        BootstrapDialog.show({ 
+             title: idioma.habilitarRepositori,
+             message:html,
+             buttons:[
+               {
+                label:'ok',
+                action: function(dialogItself){                      
+                dialogItself.close();
+                        }
+              },
+              ],
+              onshown: function(){ $.material.init();}
+         });
+      }
+  function mostrarAfegirRespositori(){
+    var html = "<div class='input-group'><span class='input-group-addon' id='basic-addon1'>"+this.idioma.nom+":</span><input id='repositoriManualNom' type='text' class='form-control' placeholder='nom' aria-describedby='basic-addon1'></div>";
+    html += "<div class='input-group'><span class='input-group-addon' id='basic-addon2' >"+this.idioma.repositori+":</span><input id='repositoriManualRepositori' type='text' class='form-control' placeholder='repositori' aria-describedby='basic-addon1'></div>";
+    
+          BootstrapDialog.show({ 
+             title:this.idioma.afegirRepositori,
+             message:html,
+             buttons:[
+               {
+                label:'ok',
+                action: function(dialogItself){                      
+                        var nom = $('#repositoriManualNom').val();
+                        var rep  = $('#repositoriManualRepositori').val();
+                        if ((nom!='') && (rep!=''))
+                           {
+                              respositorisPropis.push({nom:nom,repositori:rep});
+                              var nouHtml = creaCheckBoxRepositorisPropis(respositorisPropis);
+                              $('#repositorisPropis').html(nouHtml);
+                              $.material.init();
+                              var fs = require('fs');
+                              var dadesRepositori ='';
+                              for(var i=0;i<respositorisPropis.length;i++){
+                                dadesRepositori +=respositorisPropis[i].nom + "#"+respositorisPropis[i].repositori+"\n";
+                              }                              
+                              fs.writeFile(arxiu_reps, dadesRepositori, function(err) {
+                              if(err) {
+                                return console.log(err);
+                                }
+                              });  
+
+                              dialogItself.close();
+                           }
+                      }
+              },
+              {
+                label:idioma.cancelar,
+                action: function(dialogItself){
+                
+                  dialogItself.close();
+                }
+              }
+             
+              ]
+         });
+  }
+  
+  function mostrarResultatUpdate(){  
+    if ($('#mostrarResultatUpdate').hasClass('hidden')){
+      $('#mostrarResultatUpdate').removeClass('hidden');
+      $('#canviarHiddenResultat').removeClass('glyphicon-plus');
+      $('#canviarHiddenResultat').addClass('glyphicon-minus');
+    }
+    else{
+      $('#mostrarResultatUpdate').addClass('hidden');
+      $('#canviarHiddenResultat').removeClass('glyphicon-minus');
+      $('#canviarHiddenResultat').addClass('glyphicon-plus');    
+    }
+  }
+  function AcceptarCanvis(){
+    var fs = require('fs');
+    fs.writeFile("/etc/apt/sources.list", linies.join("\n"), function(err) {
+    if(err) {
+        return console.log(err);
+    }
+    var sys = require('sys');
+    var exec = require('child_process').exec;
+    var child;  
+    var dialegTancar;
+    BootstrapDialog.show({ 
+      title:'<div class="bg-primary">'+idioma.actualitzantFontsPaquets+'</div>',
+      message:'<div class="bg-info">'+idioma.espereuUnMoment+'</div>',
+      onshow:function (dialogP){ dialegTancar = dialogP}
+    });
+    child = exec("apt-get update", function (error, stdout, stderr) {  
+        dialegTancar.close();
+        var html = idioma.mostrarEixida+":<span style='cursor:pointer' class='glyphicon glyphicon-plus' id='canviarHiddenResultat' onclick='mostrarResultatUpdate()'></span><div id='mostrarResultatUpdate' class='hidden'>"+stdout+"</div>";
+         BootstrapDialog.show({ 
+             title:idioma.finalitzat,
+             message:html,
+             buttons:[{
+              label:'ok',
+              action:function(dialogP) {dialogP.close();}
+             } ]             
+             });
+    });
+    
+  });
+  }  
+  function CancelarClick(){
+    var gui = require('nw.gui');
+    var win = gui.Window.get();
+    win.close();
+  }
+  
+  
+  function carregaIdioma(){ 
+    
+    $('#textRepositorisLliurex').html(idioma.repositorisLliureX);
+    $('#textRepositorisLocal').html(idioma.repositorisLocals);
+    $('#textRepositorisAula').html(idioma.repositorisServidorAula);       
+    $('#textRepositorisGVA').html(idioma.respositorisGVA);    
+    $('#textRepositorisEducatius').html(idioma.repositorisEducatius);    
+    $('#textRepositorisUbuntu').html(idioma.respositorisUbuntu);
+    
+    
+    
+    $('#repositoriManual').attr('placeholder',idioma.afegirRepositori);
+    $('#btnOpcions').html(idioma.opcions);
+    $('#btnAcceptar').html(idioma.acceptar);
+    $('#btnCancelar').html(idioma.cancelar);
+    $('#panellRepositorisHeader1').html(idioma.repositoris);
+    $('#panellRepositorisHeader2').html(idioma.repositoris);
+  }
+  function CarregaInicialdetectaIdioma(){
+    var sys = require('sys');
+    var exec = require('child_process').exec;
+    var child;  
+    idioma = idioma_val;
+    child = exec("echo $LANG", function (error, stdout, stderr) {        
+      if (stdout.indexOf('es_ES')!=-1)
+        idioma=idioma_cas;
+      carregaIdioma();      
+    }
+    );   
+  }
+  $(document).ready(carregaInicial);
+    </script>
+    </head>
+    
+    
+<body>
+<div class="container">
+  <br/><br/>
+  <div class="row col-md-16">    
+         <div class='panel panel-primary col-md-4' >
+            <div id='panellRepositorisHeader1' class="panel-heading"></div>
+            <div id='mostrador_grafic2' class='panel-body'>              
+              <!--div id='botonsLliurex' class="checkbox checkbox-info checkbox-circle" ><input type="checkbox" class='styled' onClick='gestiona(&apos;Lliurex&apos;,repositorisLliurexNet)'></input><label id='labelRepositorisLliurex'></label></div-->
+              <!--div id='botonsLliurex' class="checkbox" ><input type="checkbox" onClick='gestiona(&apos;Lliurex&apos;,repositorisLliurexNet)'></input><label id='labelRepositorisLliurex'></label></div-->
+              <div class='form-group'>
+                <div id='botonsLliurex' class='checkbox' >
+                  <label>
+                    <input type="checkbox" onClick='gestiona(&apos;Lliurex&apos;,repositorisLliurexNet)'>&nbsp;<span id='textRepositorisLliurex'></span></input>
+                  </label>
+                </div>
+              
+              
+              <!--div id='botonsLocal' class="checkbox checkbox-info checkbox-circle" ><input type="checkbox" class='styled' onClick='gestiona(&apos;Local&apos;,repositorisLocals)' ></input><label></label></div!-->
+              
+              
+                <div id='botonsLocal' class='checkbox' >
+                  <label>
+                    <input type="checkbox" onClick='gestiona(&apos;Local&apos;,repositorisLocals)'>&nbsp;<span id='textRepositorisLocal'></span></input>
+                  </label>
+                </div>
+              
+<!--div id='botonsAula' class="checkbox checkbox-info checkbox-circle" ><input type="checkbox" class='styled' onClick='gestiona(&apos;Aula&apos;,respositoriServidorAula)'></input><label></label></div-->
+
+                <div id='botonsAula' class='checkbox' >
+                  <label>
+                    <input type="checkbox" onClick='gestiona(&apos;Aula&apos;,respositoriServidorAula)'>&nbsp;<span id='textRepositorisAula'></span></input>
+                  </label>
+                </div>
+
+              
+              
+              <!--div id='botonsGVA' class="checkbox checkbox-info checkbox-circle" ><input type="checkbox" class='styled' onClick='gestiona(&apos;GVA&apos;,respositorisGVA)'></input><label></label></div-->
+
+                <div id='botonsGVA' class='checkbox' >
+                  <label>
+                    <input type="checkbox" onClick='gestiona(&apos;GVA&apos;,respositorisGVA)'>&nbsp;<span id='textRepositorisGVA'></span></input>
+                  </label>
+                </div>
+
+                            
+              <!--div id='botonsEducatius' class="checkbox checkbox-info checkbox-circle" ><input type="checkbox" class='styled' onClick='gestiona(&apos;Educatius&apos;,respositorisEducatius)'></input><label></label></div-->
+
+                <div id='botonsEducatius' class='checkbox' >
+                  <label>
+                    <input type="checkbox" onClick='gestiona(&apos;Educatius&apos;,respositorisEducatius)'>&nbsp;<span id='textRepositorisEducatius'></span></input>
+                  </label>
+                </div>
+              
+              
+              <!--div id='botonsUbuntu' class="checkbox checkbox-info checkbox-circle" ><input type="checkbox" class='styled' onClick='gestiona(&apos;Ubuntu&apos;,respositorisUbuntu)'></input><label></label></div-->
+              
+              
+                <div id='botonsUbuntu' class='checkbox' >
+                  <label>
+                    <input type="checkbox" onClick='gestiona(&apos;Ubuntu&apos;,respositorisUbuntu)'>&nbsp;<span id='textRepositorisUbuntu'></span></input>
+                  </label>
+                </div>
+              </div> 
+              
+              <hr>
+              <!-- Repositoris particulars-->
+              <div id='repositorisPropis'></div>
+              <div class='input-group'><input id='repositoriManual' type='text' disabled class='form-control' placeholder='' aria-describedby='basic-addon1'><span class='input-group-addon' id='basic-addon1' onClick='mostrarAfegirRespositori()'><div class='glyphicon glyphicon-plus' style='cursor:pointer'></div></span></div>
+              </div>
+                  <br/><div class='row'>
+                        <button id='btnOpcions' class='btn btn-info' onClick='mostrarOpcions()' style='font-size:14px;padding-right:15px;padding-left:15px'></button>
+                        <button id='btnAcceptar' class='btn btn-info' onClick='AcceptarCanvis()' style='font-size:14px;padding-right:15px;padding-left:15px'></button>
+                        <button id='btnCancelar' class='btn btn-info' onClick='CancelarClick()' style='font-size:14px;padding-right:15px;padding-left:15px'></button> </div>
+                  
+
+              
+              
+              
+              
+            <!--/div-->
+       </div>
+
+       <div class='panel panel-primary col-md-6 col-md-offset-1 '>
+          <div class="panel-heading"><h3 class="panel-title" id='panellRepositorisHeader2'></h3></div>
+          <div id='mostrador_grafic' class='panel-cp body'>    </div>
+       </div>
+  </div>
+
+  
+</div>
+</body>
+
+
+<script>$.material.init();</script>
+
+</html>

@@ -1,0 +1,18 @@
+
+[Desktop Entry]
+Encoding=UTF-8
+Name=LliureX Apt
+Name[es]=LliureX Apt, gestor de orígenes del software
+Name[ca_ES@valencia]=lliurex-apt2.desktop
+Name[ca@valencia]=LliureX Apt, gestor d'orígens del programari
+Name[ca_ES.UTF-8@valencia]=LliureX Apt, gestor d'orígens del programari
+Comment=LliureX Apt Source Wizard
+Comment[es]=Herramienta para cambiar los orígenes del software en LliureX
+Comment[ca@valencia]=Ferramenta per a canviar els orígens del programari al LliureX 
+Comment[ca_ES.UTF-8@valencia]=Ferramenta per a canviar els orígens del programari al LliureX 
+Exec=gksu /usr/bin/lliurex-apt2
+Icon=lliurex-apt2
+StartupNotify=true
+Terminal=false
+Type=Application
+Categories=LliureX-Administration;GTK;HardwareSettings;

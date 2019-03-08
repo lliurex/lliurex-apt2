@@ -1,0 +1,23 @@
+{
+  "main": "index.html",
+  "name": "lliurex-apt",
+  "description": "Editor de sources.list",
+  "version": "0.1.0",
+  "keywords": [ "demo", "node-webkit" ],
+  "window": {
+    "title": "Lliurex-apt",
+    "icon": "link.png",
+    "toolbar": false,
+    "frame": true,
+    "width": 1024,
+    "height": 768,
+    "position": "mouse",
+    "min_width": 400,
+    "min_height": 200,
+    "max_width": 1280,
+    "max_height": 1024
+  },
+  "webkit": {
+    "plugin": true
+  }
+}
