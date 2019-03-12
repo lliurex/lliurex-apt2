@@ -1,9 +1,9 @@
 Source: lliurex-apt2
 Section: admin
 Priority: optional
-Maintainer: Vicent Fernandez i Capilla <vicent.fernandez@gva.es>
-Build-Depends: debhelper (>= 7),llxsrchelper
-Standards-Version: 3.9.5
+Maintainer: Equipo LliureX <lliurex@gva.es>
+Build-Depends: debhelper (>= 7),llxsrchelper, zero-dev
+Standards-Version: 4.1.2
 
 Package: lliurex-apt2
 Depends: nwjs0.21 
