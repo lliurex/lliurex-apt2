@@ -1,3 +1,9 @@
+lliurex-apt2 (2.2) bionic; urgency=medium
+
+  * Fixed launcher script
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Tue, 12 Mar 2019 09:21:02 +0100
+
 lliurex-apt2 (2.1) bionic; urgency=medium
 
   * bionic release. Replace gksu with pkexec

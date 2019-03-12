@@ -6,7 +6,7 @@ Build-Depends: debhelper (>= 7),llxsrchelper
 Standards-Version: 3.9.5
 
 Package: lliurex-apt2
-Depends: ${misc:Depends}, nwjs0.21 
+Depends: nwjs0.21 
 Architecture:  all
 Description: Editor de /etc/apt/sources.list
  Editor de /etc/apt/sources.list
