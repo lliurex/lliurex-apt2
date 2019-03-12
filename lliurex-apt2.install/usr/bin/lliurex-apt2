@@ -1,1 +1,2 @@
-pkexec /usr/bin/nw0.21 /usr/share/lliurex-apt2
+#!/bin/bash
+/usr/bin/nw0.21 /usr/share/lliurex-apt2
